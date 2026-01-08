@@ -145,7 +145,28 @@ The project includes a GitHub Actions workflow (`.github/workflows/build-and-tes
 - Builds the Xamarin app
 - Starts an Android emulator
 - Runs all Espresso tests
-- Uploads test results and APK as artifacts
+- Uploads test results and APKs as artifacts
+
+### Downloading Build Artifacts
+
+**From CI/CD (GitHub Actions):**
+1. Go to the [Actions tab](../../actions) in the GitHub repository
+2. Click on a successful workflow run
+3. Scroll down to the "Artifacts" section
+4. Download:
+   - `app-debug` - Xamarin application APK
+   - `test-apks` - Espresso test APKs (includes both test app and instrumentation)
+   - `test-results` - Test execution reports
+
+**From Local Builds:**
+
+After running a successful build locally (using `./build-and-test.sh`, `make all`, or individual build scripts), the APKs are automatically preserved in the `artifacts/` directory:
+
+- **Xamarin app**: `artifacts/xamarin/com.companyname.SimpleApp-Signed.apk`
+- **Espresso test app**: `artifacts/espresso/app-debug.apk`
+- **Espresso test instrumentation**: `artifacts/espresso/app-debug-androidTest.apk`
+
+See [artifacts/README.md](artifacts/README.md) for detailed information about build artifacts.
 
 ## Building the Xamarin Application
 
@@ -244,6 +265,30 @@ The application demonstrates basic Android UI interaction:
 - **Espresso** 3.6.1 for UI testing
 - **AndroidX Test** libraries for instrumentation
 - **Gradle** 9.2.1 for build automation
+
+## Build Optimizations
+
+The project includes several optimizations to speed up builds:
+
+### Gradle Configuration Cache
+The Espresso test builds use Gradle's configuration cache, which can significantly speed up subsequent builds by caching the result of the configuration phase. This is enabled in `EspressoTests/gradle.properties`:
+
+```properties
+org.gradle.configuration-cache=true
+org.gradle.caching=true
+```
+
+**Benefits:**
+- Faster build times on repeated builds (up to 50% faster)
+- Reduced configuration time
+- Better build performance in CI/CD
+
+For more information, see the [Gradle Configuration Cache documentation](https://docs.gradle.org/current/userguide/configuration_cache_enabling.html).
+
+### Build Artifact Preservation
+Successful builds automatically preserve APKs in the `artifacts/` directory, making them easy to download and deploy without rebuilding. This includes:
+- Xamarin application APK
+- Espresso test APKs (both test app and instrumentation)
 
 ## Application IDs
 

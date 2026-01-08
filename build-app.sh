@@ -42,6 +42,13 @@ if [ -f "$APK_PATH" ]; then
     echo "✓ Build successful!"
     echo "======================================"
     echo "APK Location: SimpleApp/$APK_PATH"
+    
+    # Preserve the APK in artifacts directory
+    ARTIFACTS_DIR="../artifacts/xamarin"
+    mkdir -p "$ARTIFACTS_DIR"
+    cp "$APK_PATH" "$ARTIFACTS_DIR/com.companyname.SimpleApp-Signed.apk"
+    echo "✓ APK preserved: $ARTIFACTS_DIR/com.companyname.SimpleApp-Signed.apk"
+    
     echo ""
     echo "To install on a device or emulator:"
     echo "  adb install -r SimpleApp/$APK_PATH"

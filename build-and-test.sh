@@ -43,6 +43,13 @@ if [ ! -f "$APK_PATH" ]; then
     exit 1
 fi
 echo -e "${GREEN}✓${NC} Xamarin app built successfully"
+
+# Preserve the Xamarin APK in artifacts directory
+ARTIFACTS_DIR="../artifacts/xamarin"
+mkdir -p "$ARTIFACTS_DIR"
+cp "$APK_PATH" "$ARTIFACTS_DIR/com.companyname.SimpleApp-Signed.apk"
+echo -e "${GREEN}✓${NC} APK preserved: $ARTIFACTS_DIR/com.companyname.SimpleApp-Signed.apk"
+
 cd ..
 echo ""
 
@@ -148,6 +155,22 @@ else
 fi
 
 echo -e "${GREEN}✓${NC} Espresso tests built successfully"
+
+# Preserve the test APKs in artifacts directory
+ARTIFACTS_DIR="../artifacts/espresso"
+mkdir -p "$ARTIFACTS_DIR"
+
+# Copy test APKs if they exist
+if [ -f "build/outputs/apk/debug/app-debug.apk" ]; then
+    cp "build/outputs/apk/debug/app-debug.apk" "$ARTIFACTS_DIR/app-debug.apk"
+    echo -e "${GREEN}✓${NC} Test app APK preserved: $ARTIFACTS_DIR/app-debug.apk"
+fi
+
+if [ -f "build/outputs/apk/androidTest/debug/app-debug-androidTest.apk" ]; then
+    cp "build/outputs/apk/androidTest/debug/app-debug-androidTest.apk" "$ARTIFACTS_DIR/app-debug-androidTest.apk"
+    echo -e "${GREEN}✓${NC} Test instrumentation APK preserved: $ARTIFACTS_DIR/app-debug-androidTest.apk"
+fi
+
 cd ..
 echo ""
 
