@@ -10,6 +10,10 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     
+    permissions:
+      contents: read
+      actions: write
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
