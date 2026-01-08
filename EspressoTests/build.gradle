@@ -44,4 +44,20 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
     androidTestImplementation 'androidx.test:runner:1.6.2'
     androidTestImplementation 'androidx.test:rules:1.6.1'
+    
+    // Fix Kotlin stdlib conflicts by using a consistent version
+    // and excluding older jdk7/jdk8 variants
+    constraints {
+        implementation('org.jetbrains.kotlin:kotlin-stdlib:1.9.0') {
+            because 'Fix duplicate class conflicts between kotlin-stdlib and kotlin-stdlib-jdk7/jdk8'
+        }
+    }
+    
+    configurations.all {
+        resolutionStrategy {
+            force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.0'
+            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.0'
+            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0'
+        }
+    }
 }
