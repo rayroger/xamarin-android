@@ -17,6 +17,9 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+// Import the R class from the test namespace where it's actually generated
+import com.companyname.simpleapp.test.R;
+
 /**
  * Espresso test for the Simple Xamarin App.
  * 
