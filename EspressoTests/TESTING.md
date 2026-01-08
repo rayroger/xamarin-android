@@ -74,7 +74,7 @@ This Java implementation mirrors the Xamarin app's behavior:
 ### Prerequisites
 1. Android SDK with API level 24+
 2. Android device or emulator connected and running
-3. Gradle 8.5 or compatible version
+3. Gradle 9.2.1 or compatible version
 4. Internet connection for downloading dependencies
 
 ### Commands

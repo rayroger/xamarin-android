@@ -135,7 +135,7 @@ cd EspressoTests
 # Create gradle wrapper if it doesn't exist
 if [ ! -f "./gradlew" ]; then
     echo "Creating Gradle wrapper..."
-    gradle wrapper --gradle-version=8.5 2>/dev/null || {
+    gradle wrapper --gradle-version=9.2.1 2>/dev/null || {
         echo -e "${YELLOW}⚠${NC} Could not create Gradle wrapper, using system Gradle"
     }
 fi
