@@ -20,6 +20,5 @@
   
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <AndroidLinkMode>None</AndroidLinkMode>
-    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
   </PropertyGroup>
 </Project>
