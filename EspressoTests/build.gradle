@@ -22,11 +22,18 @@ android {
         versionName "1.0"
         
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Note: Tests target the Xamarin app (com.companyname.SimpleApp)
+        // via instrumentation configured in src/androidTest/AndroidManifest.xml
     }
     
     buildTypes {
         release {
             minifyEnabled false
+        }
+        debug {
+            // Use debug signing for compatibility with Xamarin debug builds
+            signingConfig signingConfigs.debug
         }
     }
     

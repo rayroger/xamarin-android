@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Instrumentation configuration to target the Xamarin app -->
+    <instrumentation
+        android:name="androidx.test.runner.AndroidJUnitRunner"
+        android:targetPackage="com.companyname.SimpleApp"
+        android:label="Espresso Tests for Xamarin SimpleApp" />
+    
+</manifest>

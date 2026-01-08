@@ -67,10 +67,11 @@ jobs:
         target: google_apis
         arch: x86_64
         profile: Nexus 6
+        working-directory: ./
         script: |
+          set -e
           adb install -r SimpleApp/bin/Debug/net10.0-android/com.companyname.SimpleApp-Signed.apk
-          cd EspressoTests
-          ./gradlew connectedAndroidTest
+          cd EspressoTests && ./gradlew connectedAndroidTest
           
     - name: Upload test results
       if: always()
@@ -79,8 +80,14 @@ jobs:
         name: test-results
         path: EspressoTests/build/reports/androidTests/
         
-    - name: Upload APK
+    - name: Upload Xamarin APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
         path: SimpleApp/bin/Debug/net10.0-android/com.companyname.SimpleApp-Signed.apk
+        
+    - name: Upload Espresso Test APKs
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-apks
+        path: EspressoTests/build/outputs/apk/**/*.apk

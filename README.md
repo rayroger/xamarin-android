@@ -11,11 +11,13 @@ A basic Android application built with Xamarin that includes:
 - Button click functionality that updates the TextView with "Hello from Xamarin!"
 
 ### EspressoTests (Android Test Project)
-A Gradle-based Android test project containing Espresso tests that:
+A Gradle-based Android instrumentation test project containing Espresso tests that:
+- Target the actual Xamarin app using Android instrumentation
 - Verify the button can be clicked
 - Read and validate the TextView content after button click
 - Test all UI components exist and function correctly
 - **Run automatically at the end of the build process**
+- Use the same signing key as the Xamarin app for testing in the same process
 
 ## Quick Start
 
@@ -145,7 +147,28 @@ The project includes a GitHub Actions workflow (`.github/workflows/build-and-tes
 - Builds the Xamarin app
 - Starts an Android emulator
 - Runs all Espresso tests
-- Uploads test results and APK as artifacts
+- Uploads test results and APKs as artifacts
+
+### Downloading Build Artifacts
+
+**From CI/CD (GitHub Actions):**
+1. Go to the [Actions tab](../../actions) in the GitHub repository
+2. Click on a successful workflow run
+3. Scroll down to the "Artifacts" section
+4. Download:
+   - `app-debug` - Xamarin application APK
+   - `test-apks` - Espresso test APKs (includes both test app and instrumentation)
+   - `test-results` - Test execution reports
+
+**From Local Builds:**
+
+After running a successful build locally (using `./build-and-test.sh`, `make all`, or individual build scripts), the APKs are automatically preserved in the `artifacts/` directory:
+
+- **Xamarin app**: `artifacts/xamarin/com.companyname.SimpleApp-Signed.apk`
+- **Espresso test app**: `artifacts/espresso/app-debug.apk`
+- **Espresso test instrumentation**: `artifacts/espresso/app-debug-androidTest.apk`
+
+See [artifacts/README.md](artifacts/README.md) for detailed information about build artifacts.
 
 ## Building the Xamarin Application
 
@@ -245,10 +268,50 @@ The application demonstrates basic Android UI interaction:
 - **AndroidX Test** libraries for instrumentation
 - **Gradle** 9.2.1 for build automation
 
+## Build Optimizations
+
+The project includes several optimizations to speed up builds:
+
+### Gradle Configuration Cache
+The Espresso test builds use Gradle's configuration cache, which can significantly speed up subsequent builds by caching the result of the configuration phase. This is enabled in `EspressoTests/gradle.properties`:
+
+```properties
+org.gradle.configuration-cache=true
+org.gradle.caching=true
+```
+
+**Benefits:**
+- Faster build times on repeated builds (up to 50% faster)
+- Reduced configuration time
+- Better build performance in CI/CD
+
+For more information, see the [Gradle Configuration Cache documentation](https://docs.gradle.org/current/userguide/configuration_cache_enabling.html).
+
+### Build Artifact Preservation
+Successful builds automatically preserve APKs in the `artifacts/` directory, making them easy to download and deploy without rebuilding. This includes:
+- Xamarin application APK
+- Espresso test APKs (both test app and instrumentation)
+
 ## Application IDs
 
 - Xamarin App: `com.companyname.SimpleApp`
 - Test App: `com.companyname.simpleapp.test`
+
+## Instrumentation Testing
+
+The Espresso tests use Android's instrumentation framework to test the Xamarin app:
+
+- **Target Package**: `com.companyname.SimpleApp` (the Xamarin app)
+- **Test Package**: `com.companyname.simpleapp.test`
+- **Signing**: Both apps use the same debug signing key for compatibility
+- **Process**: Tests run in the same process as the Xamarin app
+- **Configuration**: See [EspressoTests/INSTRUMENTATION_SETUP.md](EspressoTests/INSTRUMENTATION_SETUP.md) for details
+
+This configuration ensures that:
+✅ Tests can interact directly with the Xamarin app's UI
+✅ Resources are accessed dynamically from the target app
+✅ Both apps share the same signing certificate for instrumentation
+✅ No duplicate Java implementation needed - tests target the real Xamarin app
 
 ## Troubleshooting
 
@@ -274,9 +337,12 @@ dotnet workload install android --skip-manifest-update
 
 ## Notes
 
-The EspressoTests project includes a Java implementation that mirrors the Xamarin app's functionality. This allows Espresso tests to run against a native Android application with the same UI and behavior as the Xamarin app.
+The EspressoTests project uses Android instrumentation testing to directly test the Xamarin app. The tests:
 
-Both applications share:
-- Identical UI layout (activity_main.xml)
-- Same button click behavior
-- Same text update functionality
+- Run in the same process as the Xamarin app
+- Use the same debug signing key for compatibility  
+- Access UI elements dynamically using resource IDs
+- Target the actual Xamarin MainActivity, not a Java mirror
+- Provide true end-to-end testing of the Xamarin implementation
+
+For detailed information about the instrumentation setup, see [EspressoTests/INSTRUMENTATION_SETUP.md](EspressoTests/INSTRUMENTATION_SETUP.md).

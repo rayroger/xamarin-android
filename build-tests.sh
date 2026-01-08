@@ -32,6 +32,22 @@ echo ""
 echo "======================================"
 echo "✓ Espresso tests built successfully!"
 echo "======================================"
+
+# Preserve the APKs in artifacts directory
+ARTIFACTS_DIR="../artifacts/espresso"
+mkdir -p "$ARTIFACTS_DIR"
+
+# Copy test APKs if they exist
+if [ -f "build/outputs/apk/debug/app-debug.apk" ]; then
+    cp "build/outputs/apk/debug/app-debug.apk" "$ARTIFACTS_DIR/app-debug.apk"
+    echo "✓ Test app APK preserved: $ARTIFACTS_DIR/app-debug.apk"
+fi
+
+if [ -f "build/outputs/apk/androidTest/debug/app-debug-androidTest.apk" ]; then
+    cp "build/outputs/apk/androidTest/debug/app-debug-androidTest.apk" "$ARTIFACTS_DIR/app-debug-androidTest.apk"
+    echo "✓ Test instrumentation APK preserved: $ARTIFACTS_DIR/app-debug-androidTest.apk"
+fi
+
 echo ""
 echo "Test APK: EspressoTests/build/outputs/apk/"
 echo ""
