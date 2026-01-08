@@ -87,5 +87,3 @@ public class MainActivityTest {
             .getIdentifier(name, "id", TARGET_PACKAGE);
     }
 }
-
-

@@ -23,10 +23,8 @@ android {
         
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
-        // Target the Xamarin app for instrumentation testing
-        testApplicationId "com.companyname.simpleapp.test"
-        // Note: The actual target app is com.companyname.SimpleApp (Xamarin app)
-        // Tests will run against the installed Xamarin app
+        // Note: Tests target the Xamarin app (com.companyname.SimpleApp)
+        // via instrumentation configured in src/androidTest/AndroidManifest.xml
     }
     
     buildTypes {
