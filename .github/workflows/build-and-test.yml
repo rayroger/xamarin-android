@@ -51,7 +51,7 @@ jobs:
     - name: Build Espresso tests
       run: |
         cd EspressoTests
-        gradle wrapper --gradle-version=8.5
+        gradle wrapper --gradle-version=8.7
         ./gradlew assembleDebug assembleDebugAndroidTest
         
     - name: Enable KVM (for emulator)
