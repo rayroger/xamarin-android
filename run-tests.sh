@@ -40,7 +40,7 @@ cd EspressoTests
 # Check if gradle wrapper exists
 if [ ! -f "./gradlew" ]; then
     echo "Gradle wrapper not found. Creating..."
-    gradle wrapper --gradle-version=8.5 || {
+    gradle wrapper --gradle-version=9.2.1 || {
         echo "Warning: Could not create Gradle wrapper"
         echo "Continuing with system Gradle..."
     }
