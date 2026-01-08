@@ -6,6 +6,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+// Import the R class from the test namespace where it's actually generated
+import com.companyname.simpleapp.test.R;
+
 public class MainActivity extends Activity {
     
     @Override
