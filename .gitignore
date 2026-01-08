@@ -1,0 +1,35 @@
+# .NET / Xamarin
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+.vs/
+
+# Gradle
+.gradle/
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# Android
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+local.properties
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Generated files
+gen/
+out/
+
+# Misc
+.DS_Store
+*.log
