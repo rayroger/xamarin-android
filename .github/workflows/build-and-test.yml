@@ -67,10 +67,11 @@ jobs:
         target: google_apis
         arch: x86_64
         profile: Nexus 6
+        working-directory: ./
         script: |
+          set -e
           adb install -r SimpleApp/bin/Debug/net10.0-android/com.companyname.SimpleApp-Signed.apk
-          cd EspressoTests
-          ./gradlew connectedAndroidTest
+          cd EspressoTests && ./gradlew connectedAndroidTest
           
     - name: Upload test results
       if: always()
