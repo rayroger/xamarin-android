@@ -91,7 +91,7 @@ This repository now contains a complete Xamarin Android application with Espress
 - **Xamarin**: .NET 10.0 for Android
 - **Language**: C# (app), Java (tests)
 - **Testing**: Espresso 3.6.1
-- **Build Tools**: dotnet CLI, Gradle 8.5
+- **Build Tools**: dotnet CLI, Gradle 9.2.1
 - **Android SDK**: API 36 (target), API 24 (minimum)
 
 ## Verification

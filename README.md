@@ -80,7 +80,7 @@ adb shell am start -n com.companyname.SimpleApp/crc649a55d3de34768ab3.MainActivi
 
 **Prerequisites:**
 - Java 17
-- Gradle 8.5
+- Gradle 9.2.1
 - Android SDK with API level 24 or higher
 - Android device or emulator (must be running)
 
@@ -101,7 +101,7 @@ make test
 **Option 3: Manual test execution**
 ```bash
 cd EspressoTests
-gradle wrapper --gradle-version=8.5
+gradle wrapper --gradle-version=9.2.1
 ./gradlew connectedAndroidTest
 ```
 
@@ -243,7 +243,7 @@ The application demonstrates basic Android UI interaction:
 - **Android SDK** API 36 (target), API 24 (minimum)
 - **Espresso** 3.6.1 for UI testing
 - **AndroidX Test** libraries for instrumentation
-- **Gradle** 8.5 for build automation
+- **Gradle** 9.2.1 for build automation
 
 ## Application IDs
 
