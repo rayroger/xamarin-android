@@ -35,14 +35,19 @@ public class MainActivityTest {
     @Before
     public void setUp() {
         // Launch the Xamarin app's main activity
+        // Xamarin generates activity names with a hash prefix like:
+        // crc649a55d3de34768ab3.MainActivity
+        // We use getLaunchIntentForPackage which automatically resolves the correct activity
         Intent intent = InstrumentationRegistry.getInstrumentation()
             .getTargetContext()
             .getPackageManager()
             .getLaunchIntentForPackage(TARGET_PACKAGE);
         
         if (intent != null) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             ActivityScenario.launch(intent);
+        } else {
+            throw new RuntimeException("Unable to find launch intent for " + TARGET_PACKAGE);
         }
     }
     
