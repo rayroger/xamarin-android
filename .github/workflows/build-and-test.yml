@@ -81,12 +81,14 @@ jobs:
         path: EspressoTests/build/reports/androidTests/
         
     - name: Upload Xamarin APK
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
         path: SimpleApp/bin/Debug/net10.0-android/com.companyname.SimpleApp-Signed.apk
         
     - name: Upload Espresso Test APKs
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: test-apks

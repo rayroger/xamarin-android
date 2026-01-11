@@ -15,9 +15,9 @@ gradle-app.setting
 
 # Android
 *.apk
-!artifacts/**/*.apk
 *.ap_
 *.aab
+artifacts/
 *.dex
 *.class
 local.properties
