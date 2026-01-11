@@ -37,7 +37,7 @@ echo ""
 
 # Use Debug build by default
 BUILD_CONFIG=${1:-Debug}
-APK_PATH="SimpleApp/bin/$BUILD_CONFIG/net10.0-android/com.companyname.SimpleApp-Signed.apk"
+APK_PATH="SimpleApp/bin/$BUILD_CONFIG/net10.0-android/com.companyname.simpleapp-Signed.apk"
 
 # Check if APK exists
 if [ ! -f "$APK_PATH" ]; then
@@ -51,7 +51,7 @@ adb install -r "$APK_PATH"
 
 echo ""
 echo "Launching application..."
-adb shell am start -n com.companyname.SimpleApp/crc649a55d3de34768ab3.MainActivity
+adb shell am start -n com.companyname.simpleapp/.MainActivity
 
 echo ""
 echo "======================================"
@@ -62,4 +62,4 @@ echo "To view logs:"
 echo "  adb logcat | grep SimpleApp"
 echo ""
 echo "To uninstall:"
-echo "  adb uninstall com.companyname.SimpleApp"
+echo "  adb uninstall com.companyname.simpleapp"

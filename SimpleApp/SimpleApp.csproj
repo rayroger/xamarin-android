@@ -5,8 +5,8 @@
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationId>com.companyname.SimpleApp</ApplicationId>
-    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationId>com.companyname.simpleapp</ApplicationId>
+    <ApplicationVersion>$([System.DateTime]::UtcNow.ToString('yyMMddHH'))</ApplicationVersion>
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <AndroidPackageFormat>apk</AndroidPackageFormat>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>

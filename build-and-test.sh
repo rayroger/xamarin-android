@@ -37,7 +37,7 @@ cd SimpleApp
 dotnet clean -v quiet
 dotnet build -c $BUILD_CONFIG -v minimal
 
-APK_PATH="bin/$BUILD_CONFIG/net10.0-android/com.companyname.SimpleApp-Signed.apk"
+APK_PATH="bin/$BUILD_CONFIG/net10.0-android/com.companyname.simpleapp-Signed.apk"
 if [ ! -f "$APK_PATH" ]; then
     echo -e "${RED}✗ Build failed - APK not found${NC}"
     exit 1
@@ -47,8 +47,8 @@ echo -e "${GREEN}✓${NC} Xamarin app built successfully"
 # Preserve the Xamarin APK in artifacts directory
 ARTIFACTS_DIR="../artifacts/xamarin"
 mkdir -p "$ARTIFACTS_DIR"
-cp "$APK_PATH" "$ARTIFACTS_DIR/com.companyname.SimpleApp-Signed.apk"
-echo -e "${GREEN}✓${NC} APK preserved: $ARTIFACTS_DIR/com.companyname.SimpleApp-Signed.apk"
+cp "$APK_PATH" "$ARTIFACTS_DIR/com.companyname.simpleapp-Signed.apk"
+echo -e "${GREEN}✓${NC} APK preserved: $ARTIFACTS_DIR/com.companyname.simpleapp-Signed.apk"
 
 cd ..
 echo ""

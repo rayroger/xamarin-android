@@ -21,23 +21,23 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
  * Espresso instrumentation test for the Xamarin SimpleApp.
  * 
  * This test verifies that:
- * 1. The button can be pressed
- * 2. The TextView displays the expected text after button click
+ * 1. The app can be launched successfully
+ * 2. The button can be pressed
+ * 3. The TextView displays the expected text after button click
  * 
- * Note: These tests target the installed Xamarin app (com.companyname.SimpleApp)
+ * Note: These tests target the installed Xamarin app (com.companyname.simpleapp)
  * The instrumentation runs with the same signing as the Xamarin app for testing.
  */
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
     
-    private static final String TARGET_PACKAGE = "com.companyname.SimpleApp";
+    private static final String TARGET_PACKAGE = "com.companyname.simpleapp";
     
     @Before
     public void setUp() {
         // Launch the Xamarin app's main activity
-        // Xamarin generates activity names with a hash prefix like:
-        // crc649a55d3de34768ab3.MainActivity
-        // We use getLaunchIntentForPackage which automatically resolves the correct activity
+        // The activity uses a non-obfuscated name: com.companyname.simpleapp.MainActivity
+        // We use getLaunchIntentForPackage which automatically resolves the launch activity
         Intent intent = InstrumentationRegistry.getInstrumentation()
             .getTargetContext()
             .getPackageManager()
@@ -49,6 +49,17 @@ public class MainActivityTest {
         } else {
             throw new RuntimeException("Unable to find launch intent for " + TARGET_PACKAGE);
         }
+    }
+    
+    @Test
+    public void testAppLaunches() {
+        // This test verifies that the Xamarin app can be launched successfully
+        // The setUp() method has already launched the app, so we just need to verify
+        // that the main UI elements are present
+        onView(withId(getResourceId("button")))
+            .check(matches(isDisplayed()));
+        onView(withId(getResourceId("textView")))
+            .check(matches(isDisplayed()));
     }
     
     @Test

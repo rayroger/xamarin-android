@@ -35,7 +35,7 @@ echo "Building application..."
 dotnet build -c $BUILD_CONFIG
 
 # Check if APK was generated
-APK_PATH="bin/$BUILD_CONFIG/net10.0-android/com.companyname.SimpleApp-Signed.apk"
+APK_PATH="bin/$BUILD_CONFIG/net10.0-android/com.companyname.simpleapp-Signed.apk"
 if [ -f "$APK_PATH" ]; then
     echo ""
     echo "======================================"
@@ -46,8 +46,8 @@ if [ -f "$APK_PATH" ]; then
     # Preserve the APK in artifacts directory
     ARTIFACTS_DIR="../artifacts/xamarin"
     mkdir -p "$ARTIFACTS_DIR"
-    cp "$APK_PATH" "$ARTIFACTS_DIR/com.companyname.SimpleApp-Signed.apk"
-    echo "✓ APK preserved: $ARTIFACTS_DIR/com.companyname.SimpleApp-Signed.apk"
+    cp "$APK_PATH" "$ARTIFACTS_DIR/com.companyname.simpleapp-Signed.apk"
+    echo "✓ APK preserved: $ARTIFACTS_DIR/com.companyname.simpleapp-Signed.apk"
     
     echo ""
     echo "To install on a device or emulator:"
