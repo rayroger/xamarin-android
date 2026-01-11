@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.companyname.simpleapp.test">
     
     <!-- This is a test-only application with no activities of its own.
          It contains instrumentation tests that target the Xamarin app. -->
