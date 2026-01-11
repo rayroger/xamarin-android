@@ -37,7 +37,7 @@ echo ""
 
 # Use Debug build by default
 BUILD_CONFIG=${1:-Debug}
-APK_PATH="SimpleApp/bin/$BUILD_CONFIG/net10.0-android/com.companyname.simpleapp-Signed.apk"
+APK_PATH="SimpleApp/bin/$BUILD_CONFIG/net10.0-android/SimpleApp-$BUILD_CONFIG.apk"
 
 # Check if APK exists
 if [ ! -f "$APK_PATH" ]; then

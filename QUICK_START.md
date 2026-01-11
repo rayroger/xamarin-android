@@ -110,8 +110,8 @@ View results in the Actions tab on GitHub.
 
 ## File Locations
 
-- **Debug APK**: `SimpleApp/bin/Debug/net10.0-android/com.companyname.simpleapp-Signed.apk`
-- **Release APK**: `SimpleApp/bin/Release/net10.0-android/com.companyname.simpleapp-Signed.apk`
+- **Debug APK**: `SimpleApp/bin/Debug/net10.0-android/SimpleApp-Debug.apk`
+- **Release APK**: `SimpleApp/bin/Release/net10.0-android/SimpleApp-Debug.apk`
 - **Test Reports**: `EspressoTests/build/reports/androidTests/connected/index.html`
 
 ## Quick Commands
