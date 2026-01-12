@@ -2,13 +2,13 @@
 
 ## Overview
 
-The Espresso tests in this project are configured to test the **Xamarin Android app** (`com.companyname.SimpleApp`) using Android instrumentation testing.
+The Espresso tests in this project are configured to test the **Xamarin Android app** (`com.companyname.simpleapp`) using Android instrumentation testing.
 
 ## Architecture
 
 ### Package Structure
 
-- **Xamarin App Package**: `com.companyname.SimpleApp`
+- **Xamarin App Package**: `com.companyname.simpleapp`
 - **Test Package**: `com.companyname.simpleapp.test`
 
 ### Instrumentation Configuration
@@ -19,7 +19,7 @@ The tests use Android's instrumentation framework to run in the same process as 
    ```xml
    <instrumentation
        android:name="androidx.test.runner.AndroidJUnitRunner"
-       android:targetPackage="com.companyname.SimpleApp"
+       android:targetPackage="com.companyname.simpleapp"
        android:label="Espresso Tests for Xamarin SimpleApp" />
    ```
 
@@ -52,7 +52,7 @@ For release builds, you would need to:
 ## How It Works
 
 1. **Build Phase**:
-   - Xamarin app is built: `com.companyname.SimpleApp-Signed.apk`
+   - Xamarin app is built: `com.companyname.simpleapp-Signed.apk`
    - Test APK is built: `app-debug-androidTest.apk`
    - Both are signed with debug key
 
@@ -75,7 +75,7 @@ private int getResourceId(String name) {
         .getInstrumentation()
         .getTargetContext()
         .getResources()
-        .getIdentifier(name, "id", "com.companyname.SimpleApp");
+        .getIdentifier(name, "id", "com.companyname.simpleapp");
 }
 ```
 
@@ -89,7 +89,7 @@ Both apps must be installed on the device:
 
 ```bash
 # Install Xamarin app
-adb install -r SimpleApp/bin/Debug/net10.0-android/com.companyname.SimpleApp-Signed.apk
+adb install -r SimpleApp/bin/Debug/net10.0-android/com.companyname.simpleapp-Signed.apk
 
 # Run tests (which also installs test APK)
 cd EspressoTests
@@ -106,7 +106,7 @@ adb shell pm list packages | grep companyname
 
 Expected output:
 ```
-package:com.companyname.SimpleApp
+package:com.companyname.simpleapp
 package:com.companyname.simpleapp.test
 ```
 

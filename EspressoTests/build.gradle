@@ -18,12 +18,16 @@ android {
         applicationId "com.companyname.simpleapp.test"
         minSdk 24
         targetSdk 36
-        versionCode 1
+        
+        // Auto-increment version code based on timestamp to allow upgrades without uninstalling
+        // Format: yyMMddHH (e.g., 26011116 for 2026-01-11 16:00 UTC)
+        def timestamp = new Date().format('yyMMddHH', TimeZone.getTimeZone('UTC'))
+        versionCode timestamp.toInteger()
         versionName "1.0"
         
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
-        // Note: Tests target the Xamarin app (com.companyname.SimpleApp)
+        // Note: Tests target the Xamarin app (com.companyname.simpleapp)
         // via instrumentation configured in src/androidTest/AndroidManifest.xml
     }
     

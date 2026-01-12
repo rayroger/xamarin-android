@@ -1,6 +1,6 @@
 namespace SimpleApp;
 
-[Activity(Label = "@string/app_name", MainLauncher = true)]
+[Activity(Label = "@string/app_name", MainLauncher = true, Name = "com.companyname.simpleapp.MainActivity")]
 public class MainActivity : Activity
 {
     protected override void OnCreate(Bundle? savedInstanceState)

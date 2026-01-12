@@ -42,7 +42,7 @@ jobs:
         
     - name: Check APK exists
       run: |
-        if [ ! -f "SimpleApp/bin/Debug/net10.0-android/com.companyname.SimpleApp-Signed.apk" ]; then
+        if [ ! -f "SimpleApp/bin/Debug/net10.0-android/SimpleApp-Debug.apk" ]; then
           echo "Error: APK not found"
           exit 1
         fi
@@ -70,7 +70,7 @@ jobs:
         working-directory: ./
         script: |
           set -e
-          adb install -r SimpleApp/bin/Debug/net10.0-android/com.companyname.SimpleApp-Signed.apk
+          adb install -r SimpleApp/bin/Debug/net10.0-android/SimpleApp-Debug.apk
           cd EspressoTests && ./gradlew connectedAndroidTest
           
     - name: Upload test results
@@ -85,7 +85,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
-        path: SimpleApp/bin/Debug/net10.0-android/com.companyname.SimpleApp-Signed.apk
+        path: SimpleApp/bin/Debug/net10.0-android/SimpleApp-Debug.apk
         
     - name: Upload Espresso Test APKs
       if: always()

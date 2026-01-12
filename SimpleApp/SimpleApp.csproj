@@ -5,8 +5,8 @@
     <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationId>com.companyname.SimpleApp</ApplicationId>
-    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationId>com.companyname.simpleapp</ApplicationId>
+    <ApplicationVersion>$([System.DateTime]::UtcNow.ToString('yyMMddHH'))</ApplicationVersion>
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <AndroidPackageFormat>apk</AndroidPackageFormat>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
@@ -21,4 +21,14 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <AndroidLinkMode>None</AndroidLinkMode>
   </PropertyGroup>
+  
+  <!-- Create user-friendly APK name after build -->
+  <Target Name="CopyApkWithFriendlyName" AfterTargets="Build">
+    <PropertyGroup>
+      <SourceApk>$(OutputPath)$(ApplicationId)-Signed.apk</SourceApk>
+      <FriendlyApk>$(OutputPath)SimpleApp-$(Configuration).apk</FriendlyApk>
+    </PropertyGroup>
+    <Copy SourceFiles="$(SourceApk)" DestinationFiles="$(FriendlyApk)" Condition="Exists('$(SourceApk)')" />
+    <Message Text="Created user-friendly APK: $(FriendlyApk)" Importance="high" Condition="Exists('$(SourceApk)')" />
+  </Target>
 </Project>

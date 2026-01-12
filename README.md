@@ -2,6 +2,12 @@
 
 This repository contains a simple Xamarin Android application with Espresso-based UI tests that run automatically at the end of the build.
 
+## 📋 Documentation
+
+- **[Installation and Test Execution Guide](INSTALL_AND_TEST.md)** - Detailed step-by-step instructions
+- **[Quick Start Guide](QUICK_START.md)** - Quick reference for common tasks
+- **[Instrumentation Setup](EspressoTests/INSTRUMENTATION_SETUP.md)** - Technical details on test configuration
+
 ## Project Structure
 
 ### SimpleApp (Xamarin.Android Application)
@@ -72,10 +78,10 @@ cd SimpleApp
 dotnet build -c Debug
 
 # Install on device (requires adb)
-adb install -r bin/Debug/net10.0-android/com.companyname.SimpleApp-Signed.apk
+adb install -r bin/Debug/net10.0-android/SimpleApp-Debug.apk
 
 # Launch the app
-adb shell am start -n com.companyname.SimpleApp/crc649a55d3de34768ab3.MainActivity
+adb shell am start -n com.companyname.simpleapp/.MainActivity
 ```
 
 ### Run Tests Only
@@ -164,7 +170,7 @@ The project includes a GitHub Actions workflow (`.github/workflows/build-and-tes
 
 After running a successful build locally (using `./build-and-test.sh`, `make all`, or individual build scripts), the APKs are automatically preserved in the `artifacts/` directory:
 
-- **Xamarin app**: `artifacts/xamarin/com.companyname.SimpleApp-Signed.apk`
+- **Xamarin app**: `artifacts/xamarin/SimpleApp-Debug.apk`
 - **Espresso test app**: `artifacts/espresso/app-debug.apk`
 - **Espresso test instrumentation**: `artifacts/espresso/app-debug-androidTest.apk`
 
@@ -193,8 +199,8 @@ dotnet build -c Release
 ```
 
 ### Output Files
-- **Debug APK**: `SimpleApp/bin/Debug/net10.0-android/com.companyname.SimpleApp-Signed.apk`
-- **Release APK**: `SimpleApp/bin/Release/net10.0-android/com.companyname.SimpleApp-Signed.apk`
+- **Debug APK**: `SimpleApp/bin/Debug/net10.0-android/SimpleApp-Debug.apk`
+- **Release APK**: `SimpleApp/bin/Release/net10.0-android/SimpleApp-Debug.apk`
 
 ## Running on Device/Emulator
 
@@ -216,7 +222,7 @@ adb devices
 adb logcat | grep SimpleApp
 
 # Uninstall app
-adb uninstall com.companyname.SimpleApp
+adb uninstall com.companyname.simpleapp
 ```
 
 ## Running Espresso Tests
@@ -294,14 +300,14 @@ Successful builds automatically preserve APKs in the `artifacts/` directory, mak
 
 ## Application IDs
 
-- Xamarin App: `com.companyname.SimpleApp`
+- Xamarin App: `com.companyname.simpleapp`
 - Test App: `com.companyname.simpleapp.test`
 
 ## Instrumentation Testing
 
 The Espresso tests use Android's instrumentation framework to test the Xamarin app:
 
-- **Target Package**: `com.companyname.SimpleApp` (the Xamarin app)
+- **Target Package**: `com.companyname.simpleapp` (the Xamarin app)
 - **Test Package**: `com.companyname.simpleapp.test`
 - **Signing**: Both apps use the same debug signing key for compatibility
 - **Process**: Tests run in the same process as the Xamarin app

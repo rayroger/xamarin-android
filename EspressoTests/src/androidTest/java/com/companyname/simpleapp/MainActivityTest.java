@@ -21,34 +21,51 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
  * Espresso instrumentation test for the Xamarin SimpleApp.
  * 
  * This test verifies that:
- * 1. The button can be pressed
- * 2. The TextView displays the expected text after button click
+ * 1. The app can be launched successfully
+ * 2. The button can be pressed
+ * 3. The TextView displays the expected text after button click
  * 
- * Note: These tests target the installed Xamarin app (com.companyname.SimpleApp)
- * The instrumentation runs with the same signing as the Xamarin app for testing.
+ * Note: The target package is automatically retrieved from the instrumentation context,
+ * which is synchronized with the targetPackage in AndroidManifest.xml.
+ * No need to hardcode package names - it's all configured in one place!
  */
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
     
-    private static final String TARGET_PACKAGE = "com.companyname.SimpleApp";
+    // Get target package from instrumentation context - synchronized with AndroidManifest.xml
+    // This way we don't need to hardcode the package name in multiple places
+    private static String getTargetPackage() {
+        return InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName();
+    }
     
     @Before
     public void setUp() {
         // Launch the Xamarin app's main activity
-        // Xamarin generates activity names with a hash prefix like:
-        // crc649a55d3de34768ab3.MainActivity
-        // We use getLaunchIntentForPackage which automatically resolves the correct activity
+        // The activity uses a non-obfuscated name: com.companyname.simpleapp.MainActivity
+        // We use getLaunchIntentForPackage which automatically resolves the launch activity
+        String targetPackage = getTargetPackage();
         Intent intent = InstrumentationRegistry.getInstrumentation()
             .getTargetContext()
             .getPackageManager()
-            .getLaunchIntentForPackage(TARGET_PACKAGE);
+            .getLaunchIntentForPackage(targetPackage);
         
         if (intent != null) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             ActivityScenario.launch(intent);
         } else {
-            throw new RuntimeException("Unable to find launch intent for " + TARGET_PACKAGE);
+            throw new RuntimeException("Unable to find launch intent for " + targetPackage);
         }
+    }
+    
+    @Test
+    public void testAppLaunches() {
+        // This test verifies that the Xamarin app can be launched successfully
+        // The setUp() method has already launched the app, so we just need to verify
+        // that the main UI elements are present
+        onView(withId(getResourceId("button")))
+            .check(matches(isDisplayed()));
+        onView(withId(getResourceId("textView")))
+            .check(matches(isDisplayed()));
     }
     
     @Test
@@ -89,6 +106,6 @@ public class MainActivityTest {
             .getInstrumentation()
             .getTargetContext()
             .getResources()
-            .getIdentifier(name, "id", TARGET_PACKAGE);
+            .getIdentifier(name, "id", getTargetPackage());
     }
 }
