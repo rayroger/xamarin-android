@@ -79,6 +79,26 @@ jobs:
         gradle wrapper --gradle-version=9.2.1
         ./gradlew assembleDebug assembleDebugAndroidTest
         
+    - name: Verify APK signing certificates match
+      run: |
+        echo "Verifying signing certificates for both APKs..."
+        
+        # Get certificate fingerprints for both APKs
+        XAMARIN_CERT=$(keytool -printcert -jarfile SimpleApp/bin/Debug/net10.0-android/SimpleApp-Debug.apk | grep "SHA256:" | head -1)
+        TEST_CERT=$(keytool -printcert -jarfile EspressoTests/build/outputs/apk/debug/app-debug.apk | grep "SHA256:" | head -1)
+        
+        echo "Xamarin APK certificate: $XAMARIN_CERT"
+        echo "Test APK certificate: $TEST_CERT"
+        
+        # Compare certificates
+        if [ "$XAMARIN_CERT" = "$TEST_CERT" ]; then
+          echo "✓ Both APKs are signed with the same certificate"
+        else
+          echo "✗ ERROR: APKs are signed with different certificates!"
+          echo "This will cause instrumentation tests to fail."
+          exit 1
+        fi
+        
     - name: Enable KVM (for emulator)
       run: |
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -95,7 +115,13 @@ jobs:
         working-directory: ./
         script: |
           set -e
+          echo "Installing Xamarin app..."
           adb install -r SimpleApp/bin/Debug/net10.0-android/SimpleApp-Debug.apk
+          
+          echo "Verifying installed packages..."
+          adb shell pm list packages | grep companyname || echo "No companyname packages found yet"
+          
+          echo "Running instrumentation tests..."
           cd EspressoTests && ./gradlew connectedAndroidTest
           
     - name: Upload test results
