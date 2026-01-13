@@ -42,13 +42,13 @@ jobs:
       
     - name: Generate unified debug keystore
       run: |
-        # Create .android directory if it doesn't exist
-        mkdir -p ~/.android
+        # Create keystore directory in $GITHUB_WORKSPACE to ensure persistence across steps
+        mkdir -p $GITHUB_WORKSPACE/android/keystore
         
         # Generate a debug keystore with standard Android debug key parameters
         # This ensures both Xamarin and Gradle builds use the same signing certificate
         keytool -genkeypair \
-          -keystore ~/.android/debug.keystore \
+          -keystore $GITHUB_WORKSPACE/android/keystore/debug.keystore \
           -storepass android \
           -alias androiddebugkey \
           -keypass android \
@@ -57,15 +57,15 @@ jobs:
           -validity 10000 \
           -dname "CN=Android Debug,O=Android,C=US"
         
-        echo "✓ Unified debug keystore generated"
+        echo "✓ Unified debug keystore generated at $GITHUB_WORKSPACE/android/keystore/debug.keystore"
       
     - name: Build Xamarin app
       run: |
         cd SimpleApp
-        # Configure Xamarin to use the shared debug keystore
+        # Configure Xamarin to use the shared debug keystore from $GITHUB_WORKSPACE
         dotnet build -c Debug \
           -p:AndroidKeyStore=true \
-          -p:AndroidSigningKeyStore=$HOME/.android/debug.keystore \
+          -p:AndroidSigningKeyStore=$GITHUB_WORKSPACE/android/keystore/debug.keystore \
           -p:AndroidSigningKeyAlias=androiddebugkey \
           -p:AndroidSigningKeyPass=android \
           -p:AndroidSigningStorePass=android
@@ -82,7 +82,7 @@ jobs:
       run: |
         cd EspressoTests
         gradle wrapper --gradle-version=9.2.1
-        ./gradlew assembleDebug assembleDebugAndroidTest
+        ./gradlew assembleDebug assembleDebugAndroidTest -PdebugKeystorePath=$GITHUB_WORKSPACE/android/keystore/debug.keystore
         
     - name: Verify APK signing certificates match
       run: |
