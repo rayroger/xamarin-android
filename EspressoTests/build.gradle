@@ -35,12 +35,14 @@ android {
         debug {
             // Use keystore from $GITHUB_WORKSPACE if available (in CI), otherwise use standard location
             // This ensures the test APK is signed with the same certificate as the Xamarin app
-            def workspace = System.getenv('GITHUB_WORKSPACE')
-            def keystorePath = workspace 
-                ? "${workspace}/android/keystore/debug.keystore"
-                : "${System.getProperty('user.home')}/.android/debug.keystore"
             
-            println "DEBUG: GITHUB_WORKSPACE=${workspace}"
+            // Try project property first (can be passed via -P flag), then environment variable, then default
+            def keystorePath = project.hasProperty('debugKeystorePath') 
+                ? project.property('debugKeystorePath')
+                : System.getenv('GITHUB_WORKSPACE') 
+                    ? "${System.getenv('GITHUB_WORKSPACE')}/android/keystore/debug.keystore"
+                    : "${System.getProperty('user.home')}/.android/debug.keystore"
+            
             println "DEBUG: Keystore path=${keystorePath}"
             println "DEBUG: File exists=${file(keystorePath).exists()}"
             

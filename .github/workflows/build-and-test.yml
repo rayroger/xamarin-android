@@ -82,7 +82,7 @@ jobs:
       run: |
         cd EspressoTests
         gradle wrapper --gradle-version=9.2.1
-        ./gradlew assembleDebug assembleDebugAndroidTest
+        ./gradlew assembleDebug assembleDebugAndroidTest -PdebugKeystorePath=$GITHUB_WORKSPACE/android/keystore/debug.keystore
         
     - name: Verify APK signing certificates match
       run: |
