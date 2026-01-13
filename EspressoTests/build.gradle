@@ -43,9 +43,6 @@ android {
                     ? "${System.getenv('GITHUB_WORKSPACE')}/android/keystore/debug.keystore"
                     : "${System.getProperty('user.home')}/.android/debug.keystore"
             
-            println "DEBUG: Keystore path=${keystorePath}"
-            println "DEBUG: File exists=${file(keystorePath).exists()}"
-            
             storeFile file(keystorePath)
             storePassword 'android'
             keyAlias 'androiddebugkey'
