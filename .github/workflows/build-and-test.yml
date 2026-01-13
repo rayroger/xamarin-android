@@ -85,9 +85,9 @@ jobs:
         
         # Define APK paths
         XAMARIN_APK="SimpleApp/bin/Debug/net10.0-android/SimpleApp-Debug.apk"
-        # Standard Gradle output paths for test APKs
-        TEST_APP_APK="EspressoTests/build/outputs/apk/debug/app-debug.apk"
-        TEST_INSTRUMENTATION_APK="EspressoTests/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+        # The Gradle project name is "EspressoTests" (from settings.gradle)
+        TEST_APP_APK="EspressoTests/build/outputs/apk/debug/EspressoTests-debug.apk"
+        TEST_INSTRUMENTATION_APK="EspressoTests/build/outputs/apk/androidTest/debug/EspressoTests-debug-androidTest.apk"
         
         # Verify APK exists
         if [ ! -f "$XAMARIN_APK" ]; then
