@@ -35,7 +35,20 @@ public class MainActivityTest {
     // Get target package from instrumentation context - synchronized with AndroidManifest.xml
     // This way we don't need to hardcode the package name in multiple places
     private static String getTargetPackage() {
-        return InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName();
+        String targetPkg = InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName();
+        
+        // Verify we got the correct target package (not the test package)
+        // The target should be "com.companyname.simpleapp", not "com.companyname.simpleapp.test"
+        if (targetPkg.endsWith(".test")) {
+            // This shouldn't happen with proper instrumentation configuration and matching signatures
+            throw new IllegalStateException(
+                "Target package appears to be the test package (" + targetPkg + "). " +
+                "This usually indicates a signing certificate mismatch between the app and test APKs. " +
+                "Ensure both are signed with the same debug key."
+            );
+        }
+        
+        return targetPkg;
     }
     
     @Before
@@ -44,6 +57,7 @@ public class MainActivityTest {
         // The activity uses a non-obfuscated name: com.companyname.simpleapp.MainActivity
         // We use getLaunchIntentForPackage which automatically resolves the launch activity
         String targetPackage = getTargetPackage();
+        
         Intent intent = InstrumentationRegistry.getInstrumentation()
             .getTargetContext()
             .getPackageManager()
@@ -53,7 +67,15 @@ public class MainActivityTest {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             ActivityScenario.launch(intent);
         } else {
-            throw new RuntimeException("Unable to find launch intent for " + targetPackage);
+            // Provide detailed error message for troubleshooting
+            throw new RuntimeException(
+                "Unable to find launch intent for package: " + targetPackage + "\n" +
+                "Possible causes:\n" +
+                "1. App not installed on device\n" +
+                "2. App has no launcher activity defined in AndroidManifest.xml\n" +
+                "3. Signing certificate mismatch preventing instrumentation\n" +
+                "Verify: adb shell pm list packages | grep companyname"
+            );
         }
     }
     
