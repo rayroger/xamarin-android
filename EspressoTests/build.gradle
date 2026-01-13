@@ -33,10 +33,11 @@ android {
     
     signingConfigs {
         debug {
-            // Use the standard Android debug keystore location
+            // Use keystore from $GITHUB_WORKSPACE if available (in CI), otherwise use standard location
             // This ensures the test APK is signed with the same certificate as the Xamarin app
-            // The path works across Linux, macOS, and Windows (via System property)
-            def keystorePath = "${System.getProperty('user.home')}/.android/debug.keystore"
+            def keystorePath = System.getenv('GITHUB_WORKSPACE') 
+                ? "${System.getenv('GITHUB_WORKSPACE')}/android/keystore/debug.keystore"
+                : "${System.getProperty('user.home')}/.android/debug.keystore"
             storeFile file(keystorePath)
             storePassword 'android'
             keyAlias 'androiddebugkey'
