@@ -94,19 +94,37 @@ jobs:
         TEST_APP_APK="EspressoTests/build/outputs/apk/debug/EspressoTests-debug.apk"
         TEST_INSTRUMENTATION_APK="EspressoTests/build/outputs/apk/androidTest/debug/EspressoTests-debug-androidTest.apk"
         
-        # Verify APK exists
+        # Verify APKs exist
         if [ ! -f "$XAMARIN_APK" ]; then
           echo "Error: Xamarin APK not found at $XAMARIN_APK"
           exit 1
         fi
         
-        # Use the test app APK (not the instrumentation APK) for comparison
         if [ ! -f "$TEST_APP_APK" ]; then
           echo "Error: Test app APK not found at $TEST_APP_APK"
           exit 1
         fi
         
-        # Get certificate fingerprints for both APKs
+        # Use apksigner to verify signatures (more reliable than keytool for APKs)
+        APKSIGNER="$ANDROID_HOME/build-tools/35.0.0/apksigner"
+        
+        echo "Checking Xamarin APK signature..."
+        $APKSIGNER verify --print-certs --verbose "$XAMARIN_APK" || {
+          echo "✗ ERROR: Xamarin APK is not properly signed!"
+          exit 1
+        }
+        
+        echo ""
+        echo "Checking Test APK signature..."
+        $APKSIGNER verify --print-certs --verbose "$TEST_APP_APK" || {
+          echo "✗ ERROR: Test APK is not properly signed!"
+          exit 1
+        }
+        
+        echo ""
+        echo "Extracting certificate fingerprints..."
+        
+        # Extract SHA256 fingerprints using keytool
         XAMARIN_CERT=$(keytool -printcert -jarfile "$XAMARIN_APK" | grep "SHA256:" | head -1)
         TEST_CERT=$(keytool -printcert -jarfile "$TEST_APP_APK" | grep "SHA256:" | head -1)
         
