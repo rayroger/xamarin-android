@@ -83,9 +83,27 @@ jobs:
       run: |
         echo "Verifying signing certificates for both APKs..."
         
+        # Define APK paths
+        XAMARIN_APK="SimpleApp/bin/Debug/net10.0-android/SimpleApp-Debug.apk"
+        # Standard Gradle output paths for test APKs
+        TEST_APP_APK="EspressoTests/build/outputs/apk/debug/app-debug.apk"
+        TEST_INSTRUMENTATION_APK="EspressoTests/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+        
+        # Verify APK exists
+        if [ ! -f "$XAMARIN_APK" ]; then
+          echo "Error: Xamarin APK not found at $XAMARIN_APK"
+          exit 1
+        fi
+        
+        # Use the test app APK (not the instrumentation APK) for comparison
+        if [ ! -f "$TEST_APP_APK" ]; then
+          echo "Error: Test app APK not found at $TEST_APP_APK"
+          exit 1
+        fi
+        
         # Get certificate fingerprints for both APKs
-        XAMARIN_CERT=$(keytool -printcert -jarfile SimpleApp/bin/Debug/net10.0-android/SimpleApp-Debug.apk | grep "SHA256:" | head -1)
-        TEST_CERT=$(keytool -printcert -jarfile EspressoTests/build/outputs/apk/debug/app-debug.apk | grep "SHA256:" | head -1)
+        XAMARIN_CERT=$(keytool -printcert -jarfile "$XAMARIN_APK" | grep "SHA256:" | head -1)
+        TEST_CERT=$(keytool -printcert -jarfile "$TEST_APP_APK" | grep "SHA256:" | head -1)
         
         echo "Xamarin APK certificate: $XAMARIN_CERT"
         echo "Test APK certificate: $TEST_CERT"
@@ -119,7 +137,7 @@ jobs:
           adb install -r SimpleApp/bin/Debug/net10.0-android/SimpleApp-Debug.apk
           
           echo "Verifying installed packages..."
-          adb shell pm list packages | grep companyname || echo "No companyname packages found yet"
+          adb shell pm list packages | grep "com.companyname.simpleapp" || echo "Warning: Xamarin app package not found"
           
           echo "Running instrumentation tests..."
           cd EspressoTests && ./gradlew connectedAndroidTest
