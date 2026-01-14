@@ -25,9 +25,7 @@ android {
         versionCode timestamp.toInteger()
         versionName "1.0"
         
-        // 2. Explicitly sets the application ID for the test APK. This is critical.
-        testApplicationId "com.companyname.simpleapp.espresso.test"
-    
+   
         // 3. Explicitly defines the runner class.
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
        
