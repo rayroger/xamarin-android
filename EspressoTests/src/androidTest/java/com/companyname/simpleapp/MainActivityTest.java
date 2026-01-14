@@ -38,7 +38,7 @@ public class MainActivityTest {
         String targetPkg = InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName();
         
         // Verify we got the correct target package (not the test package)
-        // The target should be "com.companyname.simpleapp", not "com.companyname.simpleapp.test"
+        // The target should be "com.companyname.simpleapp", not the test/instrumentation package
         if (targetPkg.endsWith(".test")) {
             // This shouldn't happen with proper instrumentation configuration and matching signatures
             throw new IllegalStateException(

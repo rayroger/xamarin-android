@@ -11,11 +11,11 @@ buildscript {
 apply plugin: 'com.android.application'
 
 android {
-    namespace 'com.companyname.simpleapp.test'
+    namespace 'com.companyname.simpleapp.espresso'
     compileSdk 36
     
     defaultConfig {
-        applicationId "com.companyname.simpleapp.test"
+        applicationId "com.companyname.simpleapp.espresso"
         minSdk 24
         targetSdk 36
         
