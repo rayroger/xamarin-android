@@ -26,6 +26,17 @@ android {
         versionName "1.0"
         
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+       
+        // Set the target package via an instrumentation argument
+        testInstrumentationRunnerArguments.put("targetPackage", "com.companyname.simpleapp")
+
+        // 2. This explicitly tells Gradle what the test APK's ID should be.
+        //    This matches what 'adb pm list packages' shows.
+        testApplicationId "com.companyname.simpleapp.espresso.test"
+
+        // 3. Explicitly define the runner.
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
         
         // Note: Tests target the Xamarin app (com.companyname.simpleapp)
         // via instrumentation configured in src/androidTest/AndroidManifest.xml
