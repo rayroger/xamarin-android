@@ -31,11 +31,6 @@ android {
         // 3. Explicitly defines the runner class.
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
        
-        // 4. (OPTIONAL but RECOMMENDED) Use arguments to set the target.
-        // This is a robust way to ensure the runner targets the correct app,
-        // but your Java code with the hardcoded package name also handles this.
-        // Keeping it here provides an extra layer of configuration safety.
-        testInstrumentationRunnerArguments.put("targetPackage", "com.companyname.simpleapp")
     }
 
     
