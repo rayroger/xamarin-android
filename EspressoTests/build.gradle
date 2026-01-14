@@ -15,32 +15,29 @@ android {
     compileSdk 36
     
     defaultConfig {
+        // 1. Sets the application ID for the "shell" APK.
         applicationId "com.companyname.simpleapp.espresso"
         minSdk 24
-        targetSdk 36
-        
-        // Auto-increment version code based on timestamp to allow upgrades without uninstalling
-        // Format: yyMMddHH (e.g., 26011116 for 2026-01-11 16:00 UTC)
+        targetSdk 36 // Use 34 if you don't have that SDK yet, 36 is very new.
+    
+        // Your auto-incrementing version code is a great idea.
         def timestamp = new Date().format('yyMMddHH', TimeZone.getTimeZone('UTC'))
         versionCode timestamp.toInteger()
         versionName "1.0"
         
+        // 2. Explicitly sets the application ID for the test APK. This is critical.
+        testApplicationId "com.companyname.simpleapp.espresso.test"
+    
+        // 3. Explicitly defines the runner class.
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
        
-        // Set the target package via an instrumentation argument
+        // 4. (OPTIONAL but RECOMMENDED) Use arguments to set the target.
+        // This is a robust way to ensure the runner targets the correct app,
+        // but your Java code with the hardcoded package name also handles this.
+        // Keeping it here provides an extra layer of configuration safety.
         testInstrumentationRunnerArguments.put("targetPackage", "com.companyname.simpleapp")
-
-        // 2. This explicitly tells Gradle what the test APK's ID should be.
-        //    This matches what 'adb pm list packages' shows.
-        testApplicationId "com.companyname.simpleapp.espresso.test"
-
-        // 3. Explicitly define the runner.
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        
-        // Note: Tests target the Xamarin app (com.companyname.simpleapp)
-        // via instrumentation configured in src/androidTest/AndroidManifest.xml
     }
+
     
     signingConfigs {
         debug {
