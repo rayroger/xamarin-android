@@ -9,7 +9,8 @@ The Espresso tests in this project are configured to test the **Xamarin Android 
 ### Package Structure
 
 - **Xamarin App Package**: `com.companyname.simpleapp`
-- **Test Package**: `com.companyname.simpleapp.test`
+- **Test Package**: `com.companyname.simpleapp.espresso`
+- **Instrumentation Package**: `com.companyname.simpleapp.espresso.test` (auto-generated)
 
 ### Instrumentation Configuration
 
@@ -25,8 +26,10 @@ The tests use Android's instrumentation framework to run in the same process as 
 
 2. **`build.gradle`**:
    ```gradle
-   testApplicationId "com.companyname.simpleapp.test"
+   applicationId "com.companyname.simpleapp.espresso"
    ```
+   
+   Note: The instrumentation test package will be automatically named `com.companyname.simpleapp.espresso.test` by appending `.test` to the applicationId.
 
 ## Signing and Process Sharing
 
@@ -107,8 +110,11 @@ adb shell pm list packages | grep companyname
 Expected output:
 ```
 package:com.companyname.simpleapp
-package:com.companyname.simpleapp.test
+package:com.companyname.simpleapp.espresso
+package:com.companyname.simpleapp.espresso.test
 ```
+
+Note: The `.espresso.test` package is the instrumentation runner package, automatically created by Android.
 
 ## Troubleshooting
 

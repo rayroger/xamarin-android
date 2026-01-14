@@ -145,7 +145,7 @@ adb install -r EspressoTests/build/outputs/apk/androidTest/debug/app-debug-andro
 Run the instrumentation tests directly:
 
 ```bash
-adb shell am instrument -w com.companyname.simpleapp.test/androidx.test.runner.AndroidJUnitRunner
+adb shell am instrument -w com.companyname.simpleapp.espresso.test/androidx.test.runner.AndroidJUnitRunner
 ```
 
 ### Method 2: Using Test Script (Recommended)
@@ -227,7 +227,8 @@ xdg-open EspressoTests/build/reports/androidTests/connected/index.html
 **Solution**: Uninstall the app first:
 ```bash
 adb uninstall com.companyname.simpleapp
-adb uninstall com.companyname.simpleapp.test
+adb uninstall com.companyname.simpleapp.espresso
+adb uninstall com.companyname.simpleapp.espresso.test
 ```
 
 Then reinstall both apps.
@@ -269,7 +270,8 @@ To completely remove all components:
 adb uninstall com.companyname.simpleapp
 
 # Uninstall test APKs
-adb uninstall com.companyname.simpleapp.test
+adb uninstall com.companyname.simpleapp.espresso
+adb uninstall com.companyname.simpleapp.espresso.test
 ```
 
 ## APK File Names Reference
@@ -284,12 +286,12 @@ After building locally, you'll find these APKs:
 ### Espresso Test Application
 - **Location**: `EspressoTests/build/outputs/apk/debug/app-debug.apk`
 - **Also named**: `EspressoTests-debug.apk` (in GitHub artifacts)
-- **Package**: com.companyname.simpleapp.test
+- **Package**: com.companyname.simpleapp.espresso
 
 ### Espresso Test Instrumentation
 - **Location**: `EspressoTests/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk`
 - **Also named**: `EspressoTests-debug-androidTest.apk` (in GitHub artifacts)
-- **Package**: com.companyname.simpleapp.test.test
+- **Package**: com.companyname.simpleapp.espresso.test
 
 ## Synchronized Package Configuration
 
@@ -329,14 +331,14 @@ To run a specific test class:
 
 ```bash
 adb shell am instrument -w -e class com.companyname.simpleapp.MainActivityTest \
-  com.companyname.simpleapp.test/androidx.test.runner.AndroidJUnitRunner
+  com.companyname.simpleapp.espresso.test/androidx.test.runner.AndroidJUnitRunner
 ```
 
 To run a specific test method:
 
 ```bash
 adb shell am instrument -w -e class com.companyname.simpleapp.MainActivityTest#testAppLaunches \
-  com.companyname.simpleapp.test/androidx.test.runner.AndroidJUnitRunner
+  com.companyname.simpleapp.espresso.test/androidx.test.runner.AndroidJUnitRunner
 ```
 
 ## Continuous Integration

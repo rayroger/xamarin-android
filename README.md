@@ -301,14 +301,16 @@ Successful builds automatically preserve APKs in the `artifacts/` directory, mak
 ## Application IDs
 
 - Xamarin App: `com.companyname.simpleapp`
-- Test App: `com.companyname.simpleapp.test`
+- Test App: `com.companyname.simpleapp.espresso`
+- Instrumentation Package: `com.companyname.simpleapp.espresso.test` (auto-generated)
 
 ## Instrumentation Testing
 
 The Espresso tests use Android's instrumentation framework to test the Xamarin app:
 
 - **Target Package**: `com.companyname.simpleapp` (the Xamarin app)
-- **Test Package**: `com.companyname.simpleapp.test`
+- **Test Package**: `com.companyname.simpleapp.espresso`
+- **Instrumentation Package**: `com.companyname.simpleapp.espresso.test` (auto-generated)
 - **Signing**: Both apps use the same debug signing key for compatibility
 - **Process**: Tests run in the same process as the Xamarin app
 - **Configuration**: See [EspressoTests/INSTRUMENTATION_SETUP.md](EspressoTests/INSTRUMENTATION_SETUP.md) for details
