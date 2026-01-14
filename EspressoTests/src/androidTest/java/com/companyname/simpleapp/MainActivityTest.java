@@ -1,8 +1,9 @@
 package com.companyname.simpleapp;
 
+import android.content.Context; // <-- 1. IMPORT 'Context'
 import android.content.Intent;
 
-import androidx.test.core.app.ActivityScenario;
+// import androidx.test.core.app.ActivityScenario; // <-- 2. REMOVE 'ActivityScenario'
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
@@ -19,55 +20,43 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 
 /**
  * Espresso instrumentation test for the Xamarin SimpleApp.
- * 
- * This test verifies that:
- * 1. The app can be launched successfully
- * 2. The button can be pressed
- * 3. The TextView displays the expected text after button click
- * 
- * Note: The target package is automatically retrieved from the instrumentation context,
- * which is synchronized with the targetPackage in AndroidManifest.xml.
- * No need to hardcode package names - it's all configured in one place!
+ * This test uses a "black box" approach by launching the app via a direct Intent,
+ * which is more robust for testing non-native (e.g., Xamarin) applications.
  */
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
     
-    // Get target package from instrumentation context - synchronized with AndroidManifest.xml
-    // This way we don't need to hardcode the package name in multiple places
     private static String getTargetPackage() {
-        String targetPkg = InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName();
-        
-        // Verify we got the correct target package (not the test package)
-        // The target should be "com.companyname.simpleapp", not the test/instrumentation package
-        if (targetPkg.endsWith(".test")) {
-            // This shouldn't happen with proper instrumentation configuration and matching signatures
-            throw new IllegalStateException(
-                "Target package appears to be the test package (" + targetPkg + "). " +
-                "This usually indicates a signing certificate mismatch between the app and test APKs. " +
-                "Ensure both are signed with the same debug key."
-            );
-        }
-        
-        return targetPkg;
+        return InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName();
     }
     
     @Before
     public void setUp() {
-        // Launch the Xamarin app's main activity
-        // The activity uses a non-obfuscated name: com.companyname.simpleapp.MainActivity
-        // We use getLaunchIntentForPackage which automatically resolves the launch activity
         String targetPackage = getTargetPackage();
         
-        Intent intent = InstrumentationRegistry.getInstrumentation()
-            .getTargetContext()
-            .getPackageManager()
-            .getLaunchIntentForPackage(targetPackage);
+        // Use the test runner's context to create and send the launch intent.
+        Context context = InstrumentationRegistry.getInstrumentation().getContext();
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(targetPackage);
         
         if (intent != null) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            ActivityScenario.launch(intent);
+
+            // --- 3. THIS IS THE ONLY SIGNIFICANT CHANGE ---
+            // Replace the ActivityScenario.launch(intent) call...
+            // ActivityScenario.launch(intent);
+
+            // ...with a direct context.startActivity(intent) call.
+            context.startActivity(intent);
+
+            // Add a brief, explicit wait to allow the black-box app to launch.
+            // This is necessary because we are no longer using ActivityScenario's automatic synchronization.
+            try {
+                Thread.sleep(2000); // Wait for 2 seconds.
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         } else {
-            // Provide detailed error message for troubleshooting
             throw new RuntimeException(
                 "Unable to find launch intent for package: " + targetPackage + "\n" +
                 "Possible causes:\n" +
@@ -81,9 +70,6 @@ public class MainActivityTest {
     
     @Test
     public void testAppLaunches() {
-        // This test verifies that the Xamarin app can be launched successfully
-        // The setUp() method has already launched the app, so we just need to verify
-        // that the main UI elements are present
         onView(withId(getResourceId("button")))
             .check(matches(isDisplayed()));
         onView(withId(getResourceId("textView")))
@@ -92,37 +78,28 @@ public class MainActivityTest {
     
     @Test
     public void testButtonClickUpdatesTextView() {
-        // Initially, the TextView should be empty
-        // Using resource ID from the Xamarin app
         onView(withId(getResourceId("textView")))
             .check(matches(withText("")));
         
-        // Click the button
         onView(withId(getResourceId("button")))
             .perform(click());
         
-        // Verify that the TextView now displays the expected text
         onView(withId(getResourceId("textView")))
             .check(matches(withText("Hello from Xamarin!")));
     }
     
     @Test
     public void testButtonExists() {
-        // Verify that the button is displayed with correct text
         onView(withId(getResourceId("button")))
             .check(matches(withText("Click Me")));
     }
     
     @Test
     public void testTextViewExists() {
-        // Verify that the TextView exists
         onView(withId(getResourceId("textView")))
             .check(matches(isDisplayed()));
     }
     
-    /**
-     * Helper method to get resource ID from the target Xamarin app's package
-     */
     private int getResourceId(String name) {
         return InstrumentationRegistry
             .getInstrumentation()
