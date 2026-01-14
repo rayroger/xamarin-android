@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <queries>
-        <package android:name="com.companyname.simpleapp" />
-    </queries>
-    
-    
+
+    <!--        This instrumentation block is the most direct way to stamp the
+        final test APK with the correct target package, resolving the
+        SecurityException when Gradle arguments are ignored.
+    -->
+    <instrumentation
+        android:name="androidx.test.runner.AndroidJUnitRunner"
+        android:targetPackage="com.companyname.simpleapp"
+        android:label="Espresso Tests for SimpleApp" />
+
 </manifest>
+
