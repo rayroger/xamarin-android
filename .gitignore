@@ -27,6 +27,9 @@ captures/
 .externalNativeBuild/
 .cxx/
 
+# Keystore files (generated dynamically in CI)
+android/keystore/
+
 # Generated files
 gen/
 out/

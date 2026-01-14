@@ -47,12 +47,17 @@ android {
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'
+            
+            // Enable both V1 (JAR) and V2 (APK) signing schemes
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
     }
     
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.debug
         }
         debug {
             // Use debug signing for compatibility with Xamarin debug builds
@@ -63,6 +68,79 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+// Debug: Print signing configuration after android block is configured
+afterEvaluate {
+    println "="*70
+    println "SIGNING CONFIGURATION SUMMARY (after evaluation):"
+    println "  Debug signing config exists: ${android.signingConfigs.debug != null}"
+    if (android.signingConfigs.debug) {
+        println "  Debug storeFile: ${android.signingConfigs.debug.storeFile?.absolutePath}"
+        println "  Debug storeFile exists: ${android.signingConfigs.debug.storeFile?.exists()}"
+        println "  Debug storeFile canRead: ${android.signingConfigs.debug.storeFile?.canRead()}"
+        println "  Debug keyAlias: ${android.signingConfigs.debug.keyAlias}"
+        println "  Debug storePassword: ${android.signingConfigs.debug.storePassword ? '***' : 'null'}"
+        println "  Debug keyPassword: ${android.signingConfigs.debug.keyPassword ? '***' : 'null'}"
+        println "  Debug v1SigningEnabled: ${android.signingConfigs.debug.v1SigningEnabled}"
+        println "  Debug v2SigningEnabled: ${android.signingConfigs.debug.v2SigningEnabled}"
+        
+        // Validate keystore file exists and is readable
+        if (!android.signingConfigs.debug.storeFile?.exists()) {
+            throw new GradleException("Keystore file does not exist: ${android.signingConfigs.debug.storeFile?.absolutePath}")
+        }
+        if (!android.signingConfigs.debug.storeFile?.canRead()) {
+            throw new GradleException("Keystore file is not readable: ${android.signingConfigs.debug.storeFile?.absolutePath}")
+        }
+    } else {
+        throw new GradleException("Debug signing config is null!")
+    }
+    println "  Debug buildType signing config: ${android.buildTypes.debug.signingConfig?.name}"
+    println "  Release buildType signing config: ${android.buildTypes.release.signingConfig?.name}"
+    
+    // Validate build types have signing configs
+    if (android.buildTypes.debug.signingConfig == null) {
+        throw new GradleException("Debug build type does not have a signing config!")
+    }
+    if (android.buildTypes.release.signingConfig == null) {
+        throw new GradleException("Release build type does not have a signing config!")
+    }
+    
+    println "="*70
+}
+
+// Task to validate keystore exists before packaging
+tasks.configureEach { task ->
+    if (task.name.contains('package') && task.name.contains('Debug')) {
+        task.doFirst {
+            def keystorePath = project.hasProperty('debugKeystorePath') 
+                ? project.property('debugKeystorePath')
+                : System.getenv('GITHUB_WORKSPACE') 
+                    ? "${System.getenv('GITHUB_WORKSPACE')}/android/keystore/debug.keystore"
+                    : "${System.getProperty('user.home')}/.android/debug.keystore"
+            
+            def keystoreFile = file(keystorePath)
+            println "="*70
+            println "VALIDATING KEYSTORE BEFORE PACKAGING:"
+            println "  Task: ${task.name}"
+            println "  Keystore path: ${keystorePath}"
+            println "  Keystore absolute path: ${keystoreFile.absolutePath}"
+            println "  Keystore exists: ${keystoreFile.exists()}"
+            println "  Keystore can read: ${keystoreFile.exists() ? keystoreFile.canRead() : 'N/A'}"
+            
+            if (android.signingConfigs.debug.storeFile) {
+                println "  Signing config storeFile: ${android.signingConfigs.debug.storeFile.absolutePath}"
+                println "  Signing config storeFile exists: ${android.signingConfigs.debug.storeFile.exists()}"
+            } else {
+                println "  WARNING: Signing config storeFile is null!"
+            }
+            println "="*70
+            
+            if (!keystoreFile.exists()) {
+                throw new GradleException("Keystore file not found at: ${keystoreFile.absolutePath}. Please ensure the keystore is generated before building.")
+            }
+        }
     }
 }
 

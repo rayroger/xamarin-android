@@ -81,7 +81,6 @@ jobs:
     - name: Build Espresso tests
       run: |
         cd EspressoTests
-        gradle wrapper --gradle-version=9.2.1
         ./gradlew assembleDebug assembleDebugAndroidTest -PdebugKeystorePath=$GITHUB_WORKSPACE/android/keystore/debug.keystore
         
     - name: Verify APK signing certificates match
@@ -94,33 +93,76 @@ jobs:
         TEST_APP_APK="EspressoTests/build/outputs/apk/debug/EspressoTests-debug.apk"
         TEST_INSTRUMENTATION_APK="EspressoTests/build/outputs/apk/androidTest/debug/EspressoTests-debug-androidTest.apk"
         
-        # Verify APK exists
+        # Verify APKs exist
         if [ ! -f "$XAMARIN_APK" ]; then
           echo "Error: Xamarin APK not found at $XAMARIN_APK"
           exit 1
         fi
         
-        # Use the test app APK (not the instrumentation APK) for comparison
         if [ ! -f "$TEST_APP_APK" ]; then
           echo "Error: Test app APK not found at $TEST_APP_APK"
           exit 1
         fi
         
-        # Get certificate fingerprints for both APKs
-        XAMARIN_CERT=$(keytool -printcert -jarfile "$XAMARIN_APK" | grep "SHA256:" | head -1)
-        TEST_CERT=$(keytool -printcert -jarfile "$TEST_APP_APK" | grep "SHA256:" | head -1)
-        
-        echo "Xamarin APK certificate: $XAMARIN_CERT"
-        echo "Test APK certificate: $TEST_CERT"
-        
-        # Compare certificates
-        if [ "$XAMARIN_CERT" = "$TEST_CERT" ]; then
-          echo "✓ Both APKs are signed with the same certificate"
-        else
-          echo "✗ ERROR: APKs are signed with different certificates!"
-          echo "This will cause instrumentation tests to fail."
+        if [ ! -f "$TEST_INSTRUMENTATION_APK" ]; then
+          echo "Error: Test instrumentation APK not found at $TEST_INSTRUMENTATION_APK"
           exit 1
         fi
+        
+        # Use apksigner to verify signatures (more reliable than keytool for APKs)
+        APKSIGNER="$ANDROID_HOME/build-tools/35.0.0/apksigner"
+        
+        echo "Checking Xamarin APK signature..."
+        $APKSIGNER verify --print-certs --verbose "$XAMARIN_APK" || {
+          echo "✗ ERROR: Xamarin APK is not properly signed!"
+          exit 1
+        }
+        
+        echo ""
+        echo "Checking Test App APK signature..."
+        $APKSIGNER verify --print-certs --verbose "$TEST_APP_APK" || {
+          echo "✗ ERROR: Test app APK is not properly signed!"
+          exit 1
+        }
+        
+        echo ""
+        echo "Checking Test Instrumentation APK signature..."
+        $APKSIGNER verify --print-certs --verbose "$TEST_INSTRUMENTATION_APK" || {
+          echo "✗ ERROR: Test instrumentation APK is not properly signed!"
+          exit 1
+        }
+        
+        echo ""
+        echo "Extracting certificate fingerprints..."
+        
+        # Extract SHA256 fingerprints using keytool
+        XAMARIN_CERT=$(keytool -printcert -jarfile "$XAMARIN_APK" | grep "SHA256:" | head -1)
+        TEST_APP_CERT=$(keytool -printcert -jarfile "$TEST_APP_APK" | grep "SHA256:" | head -1)
+        TEST_INSTRUMENTATION_CERT=$(keytool -printcert -jarfile "$TEST_INSTRUMENTATION_APK" | grep "SHA256:" | head -1)
+        
+        echo "Xamarin APK certificate:          $XAMARIN_CERT"
+        echo "Test App APK certificate:         $TEST_APP_CERT"
+        echo "Test Instrumentation APK cert:    $TEST_INSTRUMENTATION_CERT"
+        
+        # Compare certificates - both test APKs must match the Xamarin APK
+        MISMATCH=0
+        
+        if [ "$XAMARIN_CERT" != "$TEST_APP_CERT" ]; then
+          echo "✗ ERROR: Test app APK is signed with a different certificate than Xamarin APK!"
+          MISMATCH=1
+        fi
+        
+        if [ "$XAMARIN_CERT" != "$TEST_INSTRUMENTATION_CERT" ]; then
+          echo "✗ ERROR: Test instrumentation APK is signed with a different certificate than Xamarin APK!"
+          echo "This will cause instrumentation tests to fail."
+          MISMATCH=1
+        fi
+        
+        if [ $MISMATCH -eq 1 ]; then
+          exit 1
+        fi
+        
+        echo "✓ All APKs are signed with the same certificate"
         
     - name: Enable KVM (for emulator)
       run: |
