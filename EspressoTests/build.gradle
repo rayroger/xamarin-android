@@ -24,8 +24,10 @@ android {
         def timestamp = new Date().format('yyMMddHH', TimeZone.getTimeZone('UTC'))
         versionCode timestamp.toInteger()
         versionName "1.0"
-        
-   
+
+        // 2. This directly injects the target package argument, avoiding manifest conflicts
+        testInstrumentationRunnerArguments.put("targetPackage", "com.companyname.simpleapp")
+
         // 3. Explicitly defines the runner class.
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
        
