@@ -3,10 +3,6 @@
     <queries>
         <package android:name="com.companyname.simpleapp" />
     </queries>
-    <!-- Instrumentation configuration to target the Xamarin app -->
-    <instrumentation
-        android:name="androidx.test.runner.AndroidJUnitRunner"
-        android:targetPackage="com.companyname.simpleapp"
-        android:label="Espresso Tests for Xamarin SimpleApp" />
+    
     
 </manifest>
