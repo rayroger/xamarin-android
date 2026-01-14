@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    
+    <queries>
+        <package android:name="com.companyname.simpleapp" />
+    </queries>
     <!-- Instrumentation configuration to target the Xamarin app -->
     <instrumentation
         android:name="androidx.test.runner.AndroidJUnitRunner"
